@@ -1,0 +1,41 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+
+<canvas id="mypie" width="400" height="400"></canvas>
+<script>
+// Title and Value are names of the columns on SP list
+$.ajax({
+    url: "https://t6syv.sharepoint.com/sites/EsraaTeamSite/_api/web/lists/getbytitle('SuperStoreUS-2015')/items?$select=Product,Price",
+    method: "GET",
+    headers: { "Accept": "application/json; odata=nometadata" },
+    success: function (data) {
+        if (data.value.length > 0) {
+
+            var pieValues = [];
+            var pieLabels = [];
+
+            for (var i = 0; i < data.value.length; i++) {
+                pieValues.push(parseInt(data.value[i].Price));
+                pieLabels.push(data.value[i].Product);
+            }
+            var pieData = {
+                datasets: [{
+                    data: pieValues
+                }],
+
+                labels: pieLabels
+            };
+            var ctx = document.getElementById("mypie");
+
+            var myPieChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: pieData
+                });
+            }
+        },
+        error: function (data) {
+            //
+        }
+    });
+
+</script>
